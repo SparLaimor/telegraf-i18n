@@ -2,7 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import {Context as TelegrafContext, MiddlewareFn} from 'telegraf'
-import {ExtraReplyMessage, Message} from 'telegraf/typings/telegram-types'
+import {ExtraReplyMessage} from 'telegraf/typings/telegram-types'
+import {Message} from 'typegram'
 import * as yaml from 'js-yaml'
 
 import {Config, LanguageCode, Repository, RepositoryEntry, TemplateData} from './types'
@@ -172,18 +173,17 @@ export function match(resourceKey: string, templateData?: Readonly<TemplateData>
     }
 
     if (text && ctx.i18n.t(resourceKey, templateData) === text) {
-      // TODO: better way of creating RegExpExecArray yourself?
-      const result = [text];
-      (result as RegExpExecArray).index = 0;
-      (result as RegExpExecArray).input = text
-      return result as RegExpExecArray
+      return Object.assign([text], {
+        index: 0,
+        input: text
+      })
     }
 
     return null
   }
 }
 
-export function reply(resourceKey: string, extra?: ExtraReplyMessage): (ctx: TelegrafContextWithI18n) => Promise<Message> {
+export function reply(resourceKey: string, extra?: ExtraReplyMessage): (ctx: TelegrafContextWithI18n) => Promise<Message.TextMessage> {
   return async ctx => ctx.reply(ctx.i18n.t(resourceKey), extra)
 }
 
