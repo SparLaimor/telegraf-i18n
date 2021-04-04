@@ -1,6 +1,6 @@
 {
 	"name": "@edjopato/telegraf-i18n",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "Telegraf i18n fork built with TypeScript (Pull Request #40)",
 	"license": "MIT",
 	"bugs": {
