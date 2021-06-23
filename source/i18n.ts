@@ -76,6 +76,10 @@ export class I18n {
       ensureStringData[key] = String(value)
     }
 
+    if (this.config.allowNesting) {
+      compileNestedReferences(ensureStringData)
+    }
+
     this.repository[language] = {
       ...this.repository[language],
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -165,6 +169,47 @@ function compileTemplates(root: Readonly<Record<string, string>>): RepositoryEnt
   }
 
   return result
+}
+
+// Mutable
+function compileNestedReferences(stringData: Record<string, string>) {
+  const fetchNestedKeys = (value: string) => value.match(/\$t\([^)\n]+\)/gm)?.map(i => i.slice(3, -1))
+
+  const nestedStringData: Record<string, [string, string[]]> = {}
+  for (const [key, value] of Object.entries(stringData)) {
+    const nestedKeys = fetchNestedKeys(value)
+    if (nestedKeys) {
+      nestedStringData[key] = [value, nestedKeys]
+    }
+  }
+
+  // Protection of nesting two keys
+  let newLength
+  let oldLength
+
+  do {
+    const entries = Object.entries(nestedStringData);
+    [newLength, oldLength] = [entries.length, newLength]
+
+    for (const [key, valueWithNestedKeys] of entries) {
+      let [value, nestedKeys] = valueWithNestedKeys
+      for (const key of nestedKeys) {
+        if (!nestedStringData[key]) {
+          value = value.replace(`$t(${key})`, String(stringData[key]))
+        }
+      }
+
+      nestedKeys = fetchNestedKeys(value) ?? []
+
+      if (nestedKeys.length > 0) {
+        nestedStringData[key] = [value, nestedKeys]
+      } else {
+        stringData[key] = value
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete nestedStringData[key]
+      }
+    }
+  } while (oldLength !== newLength)
 }
 
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */

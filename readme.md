@@ -10,6 +10,25 @@ Internationalization middleware for [Telegraf](https://github.com/telegraf/teleg
 $ npm install telegraf-i18n
 ```
 
+## Nesting Keys
+
+Support for nested keys. To use, set **allowNesting** option and insert $t(**key**) into the localization file. Keys are searched only in the current file. Example:
+
+
+```
+{
+    greeting: 'Hello $t(nested.key)!', // Hello World!!!!
+    nested: {
+      key: 'World$t(nested.anotherKey)', // World!!!
+      anotherKey: '!!!'
+    }
+    cycle: {
+      first: '$t{cycle.second}', // $t{cycle.second}
+      second: '$t{cycle.first}' // $t{cycle.first}
+    }
+}
+```
+
 ## Example
 
 ```js
@@ -30,6 +49,7 @@ Example directory structure:
 const i18n = new I18n({
   defaultLanguage: 'en',
   allowMissing: false, // Default true
+  allowNesting: true, // Default false
   directory: path.resolve(__dirname, 'locales')
 })
 
