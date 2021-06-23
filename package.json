@@ -1,7 +1,7 @@
 {
-	"name": "@edjopato/telegraf-i18n",
-	"version": "0.2.2",
-	"description": "Telegraf i18n fork built with TypeScript (Pull Request #40)",
+	"name": "@spar_laimor/telegraf-i18n-nesting-keys",
+	"version": "0.2.3",
+	"description": "Fork of EdJoPaTo Telegraf i18n fork built with TypeScript (Pull Request #40)",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/telegraf/telegraf-i18n/issues"
@@ -9,7 +9,7 @@
 	"homepage": "https://github.com/telegraf/telegraf-i18n#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/EdJoPaTo/telegraf-i18n.git"
+		"url": "git+ssh://git@github.com/SparLaimor/telegraf-i18n.git"
 	},
 	"keywords": [
 		"telegram bot",
